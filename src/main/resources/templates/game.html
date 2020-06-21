@@ -1,0 +1,199 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
+<head th:replace="_fragments :: head">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Monopoly-style Game</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/semantic-ui@2.4.2/dist/semantic.min.css">
+    <link rel="stylesheet" href="../static/css/me.css">
+</head>
+<body>
+
+    <!--  Navigator  -->
+    <nav th:replace="_fragments :: menu(2)" class="ui attached segment m-padded-tb-mini m-shadow-small">
+        <div class="ui container">
+            <div class="ui secondary stackable menu">
+                <h2 class="ui grey header item">Monopoly-style Game</h2>
+                <a href="#" class="m-item item m-mobile-hide" th:classappend="${n==1} ? 'active'"><i class="star outline icon"></i>Introduction</a>
+                <a href="#" class="m-item item m-mobile-hide" th:classappend="${n==2} ? 'active'"><i class="hockey puck icon"></i>Game</a>
+                <a href="#" class="m-item item m-mobile-hide" th:classappend="${n==3} ? 'active'"><i class="desktop icon"></i>About IBM Security</a>
+            </div>
+        </div>
+
+        <a href="#" class="ui menu toggle grey icon button m-top-right m-mobile-show">
+            <i class="sidebar icon"></i>
+        </a>
+
+    </nav>
+
+    <!--  Content  -->
+    <div class="m-container m-padded-tb-large">
+        <div class="ui container">
+            <div class="ui stackable grid">
+                <!--Tools-->
+                <div class="twelve wide column">
+                    <div class="ui segments ">
+                        <div class="ui secondary segment">
+                            <div class="ui two column grid">
+                                <div class="column">
+                                    <i class="bullhorn icon"></i>Tools
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="ui grey segment m-padded-tb-large m-padded-small">
+                            <h3 class="ui header" th:text="${tool.title}">HEADER</h3>
+                            <p class="m-text-large" th:text="${tool.content}">description......</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!--Scores-->
+                <div class="four wide column">
+                    <div class="ui segments">
+                        <div class="ui secondary segment">
+                            <div class="ui two column grid">
+                                <div class="column">
+                                    <i class="calculator icon"></i>Score
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="ui grey segment m-padded-tb-large">
+                            <div class="ui label m-margin-tb-large">
+                                Score from Previous Event
+                                <div class="detail"><h4 class="ui violet header" th:text="${check}">15</h4></div>
+                            </div>
+
+                            <div class="ui label m-margin-tb-large">
+                                Current Cumulative Score
+                                <input type="hidden" name="score" th:value="${currSum}">
+                                <div class="detail"><h4 class="ui green header" th:text="${currSum}">30</h4></div>
+                            </div>
+
+                            <input type="hidden" name="perv-events" th:value="${page.totalElements}">
+
+                        </div>
+                    </div>
+                </div>
+
+                <!--Curr-->
+                <!--header-->
+                <div class="ui attached segment m-border-top">
+                    <h3 class="ui grey header" align="center">Current Situation</h3>
+                </div>
+
+                <!--content-->
+                <div class="ui attached segment m-border-bottom">
+                    <div class="ui padded vertical segment m-padded" >
+                        <h3 class="ui header" th:text="${curr.title}">HEADER</h3>
+                        <p class="m-text-large" th:text="${curr.content}">description......</p>
+
+
+                        <form class="ui form" id="search" name="search" action="#" method="post" th:action="@{/game}">
+
+                            <div class="grouped fields m-padded-tb">
+                                <h3 class="ui header">Would you like to use the tool described above to
+                                    deal with the current problem? Please select your choice below.</h3>
+                                <div class="field m-padded-tb-small">
+                                    <div class="required ui radio checkbox">
+                                        <input type="radio" name="check" th:value="15">
+                                        <label><h4 class="ui header">YES</h4></label>
+                                    </div>
+                                </div>
+                                <div class="field m-padded-tb-small">
+                                    <div class="required ui radio checkbox" data-tooltip="Are you sure you don't need
+                                    the tool?" data-inverted="">
+                                        <input type="radio" name="check" th:value="0">
+                                        <label><h4 class="ui header">NO</h4></label>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="ui error message"></div>
+
+                            <div class="field" align="right">
+                                <input type="hidden" name="query" th:value="${query}">
+                                <input type="hidden" name="sum">
+<!--                                    <button class="large ui green button" id="form-submit" onclick="document.forms['search'].submit()">GO</button>-->
+                                <button class="large ui green button" id="go-btn">GO</button>
+                            </div>
+
+                        </form>
+
+                        <form id="end" action="#" method="post" th:action="@{/final}" style="display: none">
+                            <input type="hidden" name="sum" th:value="${sum}">
+                            <div align="center">
+                                <button type="submit" class="ui large green button">GO</button>
+                            </div>
+                        </form>
+
+
+                    </div>
+                </div>
+
+                <!--Prev-->
+                <!--header-->
+                <div class="ui top attached segment m-border-top">
+                    <div class="ui middle aligned two column grid">
+                        <div class="column">
+                            <h3 class="ui grey header">Previous Events</h3>
+                        </div>
+                        <div class="right aligned column">
+                            <h2 class="class ui grey header m-inline-block m-text-thin"  th:text="${page.totalElements}">3</h2>&nbsp;&nbsp;Months till now
+                        </div>
+                    </div>
+                </div>
+
+                <!--listing-->
+                <div class="ui attached segment m-border-bottom">
+                    <div class="ui padded vertical segment m-padded" th:each="event : ${page.content}">
+                        <h3 class="ui header" th:text="${event.title}">HEADER</h3>
+                        <p class="m-text-large" th:text="${event.description}">description......</p>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+
+<script src="https://cdn.jsdelivr.net/npm/jquery@3.2.1/dist/jquery.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/semantic-ui@2.4.2/dist/semantic.min.js"></script>
+    <script>
+        var score = $("[name='score']").val();
+        $("[name='sum']").val(score);
+
+        var eventNum = $("[name='perv-events']").val();
+        if(eventNum=="7") {
+            document.getElementById("search").style.display= "none";
+            document.getElementById("end").style.display= "inline";
+        }
+
+        $('#go-btn').click(function () {
+            $('[name="search"]').submit();
+        });
+
+        $('.ui.form').form(
+            {
+                fields : {
+                    check: {
+                        identifier  : 'check',
+                        rules: [
+                            {
+                                type   : 'checked',
+                                prompt : 'Please choose whether to use the tool!'
+                            },
+                        ]
+                    }
+                }
+            }
+        );
+
+        // history.pushState(null, null, document.URL);
+        // window.addEventListener('popstate', function () {
+        //     history.pushState(null, null, document.URL);
+        // });
+
+    </script>
+</body>
+</html>

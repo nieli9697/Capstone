@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
+<head th:replace="_fragments :: head">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Monopoly-style Game</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/semantic-ui@2.4.2/dist/semantic.min.css">
+    <link rel="stylesheet" href="../static/css/me.css">
+</head>
+<body>
+
+    <!--  Navigator  -->
+    <nav th:replace="_fragments :: menu(3)" class="ui attached segment m-padded-tb-mini m-shadow-small">
+        <div class="ui container">
+            <div class="ui secondary stackable menu">
+                <h2 class="ui grey header item">Monopoly-style Game</h2>
+                <a href="#" class="m-item item m-mobile-hide" th:classappend="${n==1} ? 'active'"><i class="star outline icon"></i>Introduction</a>
+                <a href="#" class="m-item item m-mobile-hide" th:classappend="${n==2} ? 'active'"><i class="hockey puck icon"></i>Game</a>
+                <a href="#" class="m-item item m-mobile-hide" th:classappend="${n==3} ? 'active'"><i class="desktop icon"></i>About IBM Security</a>
+            </div>
+        </div>
+
+        <a href="#" class="ui menu toggle grey icon button m-top-right m-mobile-show">
+            <i class="sidebar icon"></i>
+        </a>
+
+    </nav>
+
+    <!--  Content  -->
+    <div class="m-container m-padded-tb-large">
+        <div class="ui container">
+            <div class="ui stackable grid">
+
+                <div class="ui top attached segment m-border-top">
+                    <div class="ui middle aligned two column grid">
+                        <div class="column">
+                            <h3 class="ui grey header">Final Step</h3>
+                        </div>
+                    </div>
+                </div>
+
+                <!--content-->
+                <div class="ui attached segment m-border-bottom">
+                    <div class="ui padded vertical segment m-padded">
+                        <h2 class="ui red header">Congratulations! You've finished the game!</h2>
+                        <div id="bonus">
+                            <h3 class="ui orange header">As you have always trusted IBM Security products through out
+                                the game, you are now winning an extra 10 points bonus!</h3>
+                        </div>
+
+                        <input type="hidden" name="curr-sum" th:value="${sum}">
+
+                        <div class="ui middle aligned two column grid m-padded-tb-large">
+                            <div class="column" align="right">
+                                <h3 class="ui header">Your final score is:</h3>
+                            </div>
+                            <div class="column" align="left">
+                                <div class="ui disabled input">
+                                    <input type="text" name="sum" class="m-text-score">
+                                </div>
+                            </div>
+                        </div>
+
+                        <div id="explanation" class="m-padded-tb-larges">
+                            <h3 class="ui grey header">The reason why you didn't get 100 points for this little game
+                            is that you didn't choose all IBM Security products provided to slove your problems.</h3>
+                        </div>
+
+                        <br><br>
+                        <p class="m-text-large">IBM Security aims to address every cybersecurity issue or incident,
+                            providing security that understands your business, security that unites your defenses, and
+                            security that unlocks your innovation.</p>
+                        <p class="m-text-large">As a leading organization in this field, IBM Security cares your
+                            cybersecurity from perspectives of Strategy and Risk Management, Threat Management, Digital
+                            Trust and Cloud Security.</p>
+                        <p class="m-text-large">Its products involve Advanced Fraud Protection, Data Security,
+                            Identity and Access Management, Intelligence Analysis and Investigations, Mainframe Security,
+                            Mobile Security, Security Intelligence and Operation, and Security Orchestration, Automation
+                            and Response (SOAR).</p>
+
+                        <p class="m-text-large m-padded-tb-large">Want to know more about IBM Security and its products?
+                        Check out this <a href="https://www.ibm.com/security">link</a>!</p>
+
+                        <p class="m-text-large">Want to start over the game again? Click
+                            <a href="http://127.0.0.1:8080/">here</a>!</p>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+
+
+<script src="https://cdn.jsdelivr.net/npm/jquery@3.2.1/dist/jquery.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/semantic-ui@2.4.2/dist/semantic.min.js"></script>
+    <script>
+        var curr = $("[name='curr-sum']").val();
+        var finalSum;
+
+        if (curr == "90") {
+            finalSum = "100";
+            document.getElementById("explanation").style.display= "none";
+        } else {
+            finalSum = curr;
+            document.getElementById("bonus").style.display= "none";
+        }
+
+        $("[name='sum']").val(finalSum);
+
+
+    </script>
+</body>
+</html>
